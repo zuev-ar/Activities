@@ -21,7 +21,8 @@ struct AddActivity: View {
             }
             .navigationBarTitle("Add new activity")
             .navigationBarItems(trailing: Button("Save", action: {
-                activities.items.append(ActivityItem(title: title, description: description))
+                let item = ActivityItem(title: title, description: description)
+                activities.items.append(item)
                 presentation.wrappedValue.dismiss()
             }))
         }

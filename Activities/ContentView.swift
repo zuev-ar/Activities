@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct ActivityItem: Identifiable, Codable {
+struct ActivityItem: Identifiable, Codable, Hashable {
     var id = UUID()
     var title: String
     var description: String
@@ -41,19 +41,23 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            List {
-                ForEach(activities.items) { item in
-                    Text(item.title)
-                        .font(.title2)
+            VStack {
+                List {
+                    ForEach(activities.items) { item in
+                        NavigationLink(destination: ActivityView(item: item, activities: activities)) {
+                            Text(item.title)
+                                .font(.title2)
+                        }
+                    }
+                    .onDelete(perform: removeItem)
                 }
-                .onDelete(perform: removeItem)
+                .navigationBarTitle("Activities")
+                .navigationBarItems(leading: EditButton(), trailing: Button(action: {
+                    showAddActivity.toggle()
+                }, label: {
+                    Image(systemName: "plus")
+                }))
             }
-            .navigationBarTitle("Activities")
-            .navigationBarItems(leading: EditButton(), trailing: Button(action: {
-                showAddActivity.toggle()
-            }, label: {
-                Image(systemName: "plus")
-            }))
         }
         .sheet(isPresented: $showAddActivity) {
             AddActivity(activities: activities)
